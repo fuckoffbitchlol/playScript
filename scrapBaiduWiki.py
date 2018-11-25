@@ -30,16 +30,9 @@ bsObj = BeautifulSoup(encode_content, "html.parser")
 nextLink = bsObj.find("a", {"class":"result-title"})
 
 contentUrl = session.get(nextLink.attrs["href"], headers = headers)
-if contentUrl.encoding == 'ISO-8859-1':
-    encodings = requests.utils.get_encodings_from_content(contentUrl.text)
-    if encodings:
-        encoding = encodings[0]
-    else:
-        encoding = contentUrl.apparent_encoding
-    encode_content = contentUrl.content.decode(encoding, 'replace') 
+modifiedUrl = contentUrl.text.encode(contentUrl.encoding).decode("utf-8")
 
-
-bsObjN = BeautifulSoup(encode_content, "html.parser")
+bsObjN = BeautifulSoup(modifiedUrl, "html.parser")
 # print(bsObjN)
 content = bsObjN.find("meta", {"name": "description"})
 print (content.attrs["content"])
